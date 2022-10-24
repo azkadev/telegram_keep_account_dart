@@ -1,5 +1,4 @@
 // ignore_for_file: non_constant_identifier_names
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:galaxeus_lib/galaxeus_lib.dart';
@@ -10,23 +9,17 @@ import 'package:path/path.dart' as p;
 
 void main(List<String> arguments) async {
   print("started telegram client");
-  int api_id = 0;
-
   /// get api_id in https://my.telegram.org/auth
+  int api_id = 0;
   String api_hash = "";
-
-  ///  get api_hash in https://my.telegram.org/auth
   /// compile first https://tdlib.github.io/td/build.html?language=dart
-  ///
   String path_tdlib = "./libtdjson.so";
-
   stdout.write("Name: ");
   String name = stdin.readLineSync().toString();
   Directory tg_dir = Directory(p.join(Directory.current.path, name));
   if (!tg_dir.existsSync()) {
     await tg_dir.create(recursive: true);
   }
-
   Tdlib tg = Tdlib(
     path_tdlib,
     clientOption: {
@@ -45,7 +38,6 @@ void main(List<String> arguments) async {
   tg.on(tg.event_update, (UpdateTd update) async {
     try {
       // print(json.encode(update.raw));
-
       /// authorization update
       if (update.raw["@type"] == "updateAuthorizationState") {
         if (update.raw["authorization_state"] is Map) {
@@ -59,7 +51,24 @@ void main(List<String> arguments) async {
             isVoid: true,
           );
 
-          if (authStateType == "authorizationStateLoggingOut") {}
+          if (authStateType == "authorizationStateWaitRegistration") {
+            if (update.raw["authorization_state"]["terms_of_service"] is Map) {
+              Map terms_of_service = update.raw["authorization_state"]["terms_of_service"] as Map;
+              if (terms_of_service["text"] is Map) {
+                await tg.invoke(
+                  "registerUser",
+                  parameters: {
+                    "first_name": "azka",
+                    "last_name": "",
+                  },
+                  clientId: update.client_id,
+                );
+              }
+            }
+          }
+          if (authStateType == "authorizationStateLoggingOut") {
+            print("akun anda telah terlog out");
+          }
           if (authStateType == "authorizationStateClosed") {
             print("close: ${update.client_id}");
             tg.exitClient(update.client_id);
@@ -67,62 +76,26 @@ void main(List<String> arguments) async {
           if (authStateType == "authorizationStateWaitPhoneNumber") {
             stdout.write("Phone number: ");
             String phone_number = stdin.readLineSync().toString();
-
-            /// use this if tdlib function not found method
-            // await tg.invoke(
-            //   "setAuthenticationPhoneNumber",
-            //   parameters: {
-            //     "phone_number": phone_number,
-            //   },
-            //   clientId: update.client_id,
-            // );
-
-            /// use call api if you can't see official docs
             await tg.callApi(
               tdlibFunction: tdlib_scheme.TdlibFunction.setAuthenticationPhoneNumber(
                 phone_number: phone_number,
               ),
-              clientId: update.client_id, // add this if your project more one client
+              clientId: update.client_id,
             );
-
-            /// use this if you wan't login as bot
-            // await tg.callApi(
-            //   tdlibFunction: TdlibFunction.checkAuthenticationBotToken(
-            //     token: "1213141541:samksamksmaksmak",
-            //   ),
-            //   clientId: update.client_id, // add this if your project more one client
-            // );
-
           }
           if (authStateType == "authorizationStateWaitCode") {
             stdout.write("Code: ");
             String code = stdin.readLineSync().toString();
-            // await tg.invoke(
-            //   "checkAuthenticationCode",
-            //   parameters: {
-            //     "code": code,
-            //   },
-            //   clientId: update.client_id,
-            // );
-
             await tg.callApi(
               tdlibFunction: tdlib_scheme.TdlibFunction.checkAuthenticationCode(
                 code: code,
               ),
-              clientId: update.client_id, // add this if your project more one client
+              clientId: update.client_id,
             );
           }
           if (authStateType == "authorizationStateWaitPassword") {
             stdout.write("Password: ");
             String password = stdin.readLineSync().toString();
-            // await tg.invoke(
-            //   "checkAuthenticationPassword",
-            //   parameters: {
-            //     "password": password,
-            //   },
-            //   clientId: update.client_id,
-            // );
-
             await tg.callApi(
               tdlibFunction: tdlib_scheme.TdlibFunction.checkAuthenticationPassword(
                 password: password,
