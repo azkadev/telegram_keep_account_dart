@@ -32,6 +32,11 @@ void main(List<String> arguments) async {
     clientOption: {
       "api_id": api_id,
       "api_hash": api_hash,
+      "use_file_database": false,
+      "use_chat_info_database": false,
+      "use_message_database": false,
+      "use_secret_chats": false,
+      'enable_storage_optimizer': true,
       "database_directory": tg_dir.path,
       "files_directory": tg_dir.path,
     },
