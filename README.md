@@ -1,6 +1,8 @@
-# Telegram keep account dart
+IyBUZWxlZ3JhbSBrZWVwIGFjY291bnQgZGFydAoKT3BlbiBzb3VyY2UgdW50
+dWsgbWVueWltcGFuIGFjY291bnQgdGVsZWdyYW0gZGVuZ2FuIGp1bWxhaCB0
+YWsgdGVyaGluZ2dhLCAKCgpbU3BlZWQtQ29kZV0oaHR0cHM6Ly93d3cueW91
+dHViZS5jb20vd2F0Y2g/dj1HRld4SHVnQnhGQSkK
 
-Open source untuk menyimpan account telegram dengan jumlah tak terhingga, 
-
-
-[Speed-Code](https://www.youtube.com/watch?v=GFWxHugBxFA)
+<!-- START GLOBAL CORPORATION -->
+404: Not Found
+<!-- END GLOBAL CORPORATION -->
